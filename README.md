@@ -1,0 +1,2 @@
+# skullbot
+ai for skullnrose
