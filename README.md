@@ -1,6 +1,6 @@
 # skullbot
-ai for skullnrose
 
+skull ai
 
 1. export db to json
 2. [,,]

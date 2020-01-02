@@ -4,7 +4,6 @@
 import argparse
 import pandas as pd
 import json
-from pprint import pprint
 from pandas.io.json import json_normalize 
 
 # parser
@@ -17,13 +16,13 @@ args = parser.parse_args()
 with open(args.input, encoding='utf-8-sig') as f_input:
         d = pd.read_json(f_input, orient='values')
 
-## split columns that are list of dictionaries
+## split columns that are lists of dictionaries
 d_temp=pd.DataFrame(d.userOthers.values.tolist(), index=d.index)
 d_temp.columns=['userOthers' + str(col) for col in d_temp.columns]
 d=pd.concat([d,d_temp], axis=1).reset_index(drop=True)
 
 d=d.filter(items=['userCurrent', 'userOthers0','userOthers1','userState']) # filter to col
-d=d[~d['userOthers1'].isnull()] # remove null values for dropout (need to fix later
+d=d[~d['userOthers1'].isnull()] # remove null values for dropout (TODO appropriate for drop players later)
 
 # split dictionary columns
 
@@ -35,7 +34,6 @@ d=d[~d['userOthers1'].isnull()] # remove null values for dropout (need to fix la
 #print(d_temp)
 
 ## normalize all columns
-print(d)
 d2=pd.DataFrame()
 for col in d:
     print(col)
@@ -44,11 +42,5 @@ for col in d:
     d_temp.columns = [col + '_' + str(i) for i in d_temp.columns]
     d2=pd.concat([d2,d_temp], axis=1).reset_index(drop=True)
 
-print(d2.head(5))
-
 # write to file
 d2.to_csv(args.output, encoding='utf-8', index=False)
-
-#with open("toptree.txt", "a") as myfile:
-#    myfile.write("\n")
-#    myfile.write(json.dumps(d, indent=4))
